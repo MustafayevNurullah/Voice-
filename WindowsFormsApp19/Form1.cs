@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
 using System.Speech.Synthesis;
+using System.IO;
 
 namespace WindowsFormsApp19
 {
@@ -26,33 +27,25 @@ namespace WindowsFormsApp19
             button3.Enabled = false;
 
         }
-
+        
         private void listView1_DragDrop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop, false) == true)
+            button3.Enabled = true;
+            string[] droppedFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
+            foreach (var item in droppedFiles)
             {
-                e.Effect = DragDropEffects.All;
+
+                filename = item;
+                counter = 2;
+
+                listView1.Items.Add(System.IO.Path.GetFileName(filename));
             }
         }
 
         private void listView1_DragEnter(object sender, DragEventArgs e)
         {
-                button3.Enabled = true;
-            string[] droppedFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
-            foreach (var item in droppedFiles)
-            {
-                
-                 filename = getFileName(item);
-            counter = 2;
-                
-                listView1.Items.Add(filename);
-            }
-
-        }
-        public string getFileName(string path)
-        {
-            return path;
-
+            
+            e.Effect = DragDropEffects.Copy;
         }
         public void Read (string path)
             {
@@ -94,6 +87,11 @@ namespace WindowsFormsApp19
             Read(filename);
             button1.Enabled = true;
             button2.Enabled = true;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
